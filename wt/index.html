@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>صفحة فرعية</title>
+<style>
+body {
+  margin: 0;
+  background: #000;
+  font-family: 'Courier New', monospace;
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;  /* يمنع التمرير الأفقي */
+overflow-y: auto;   /* يسمح بالتمرير العمودي */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+canvas#matrix {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  background: black;
+}
+
+.glitch {
+  font-size: 50px;
+  font-weight: bold;
+  color: white;
+  position: relative;
+  z-index: 2;
+  animation: glitch-skew 1s infinite linear alternate-reverse;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%;
+  overflow: hidden;
+  color: white;
+  clip: rect(0, 900px, 0, 0);
+}
+.glitch::before {
+  left: 2px;
+  text-shadow: -3px 0 red;
+  animation: glitch-anim 2s infinite linear alternate-reverse;
+}
+.glitch::after {
+  left: -2px;
+  text-shadow: -2px 0 cyan;
+  animation: glitch-anim2 2s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+  0% {clip: rect(20px,9999px,60px,0);}
+  20% {clip: rect(10px,9999px,40px,0);}
+  40% {clip: rect(30px,9999px,80px,0);}
+  60% {clip: rect(5px,9999px,30px,0);}
+  80% {clip: rect(15px,9999px,70px,0);}
+  100%{clip: rect(25px,9999px,50px,0);}
+}
+@keyframes glitch-anim2 {
+  0% {clip: rect(5px,9999px,40px,0);}
+  20% {clip: rect(15px,9999px,70px,0);}
+  40% {clip: rect(25px,9999px,50px,0);}
+  60% {clip: rect(20px,9999px,60px,0);}
+  80% {clip: rect(10px,9999px,30px,0);}
+  100%{clip: rect(30px,9999px,80px,0);}
+}
+@keyframes glitch-skew {
+  0% { transform: skew(0deg);}
+  20% { transform: skew(2deg);}
+  40% { transform: skew(-2deg);}
+  60% { transform: skew(3deg);}
+  80% { transform: skew(-1deg);}
+  100%{ transform: skew(1deg);}
+}
+
+.skull-container {
+  position: relative;
+  width: 200px;
+  z-index: 2;
+}
+.skull-container img {
+  width: 100%;
+  display: block;
+  filter: drop-shadow(0 0 6px #0ff);
+}
+.skull-glitch {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: url("38.png") no-repeat center/contain;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.skull-red { left: -2px; filter: drop-shadow(2px 0 red); }
+.skull-cyan { left: 2px; filter: drop-shadow(-2px 0 cyan); }
+
+.subtitle {
+  margin: 20px 0;
+  font-size: 20px;
+  text-align: center;
+  white-space: pre-line;
+  position: relative;
+  z-index: 2;
+}
+
+#redirectBtn {
+  margin-top: 40px;
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  background: #469b2a80;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 3;
+}
+</style>
+</head>
+<body>
+<canvas id="matrix"></canvas>
+
+<div class="glitch" data-text="هذه الصفحة مغلقة" id="glitchText">اهلا</div>
+
+<div class="skull-container" id="skullBox">
+  <img src="38.png" alt="skull">
+  <div class="skull-glitch skull-red"></div>
+  <div class="skull-glitch skull-cyan"></div>
+</div>
+
+<div class="subtitle" id="subtitle">
+  كأنّك منتبه لشيءٍ لا يراه سواك… شعورٌ مبهم ينهش داخلك، يهمس بأنّ هناك خطأً ما حولك، لكنك لا تستطيع الإمساك به. تحاول أن تبوح للآخرين، فيضحكون، يظنّونك واهمًا أو أحمق… ومع ذلك، الإحساس لا يفارقك. بل يتعاظم. وكأنّك الوحيد الذي يسمع هذا الصدى بينما هم غارقون في ملذّات زائلة وتفاهات دنيا فانية.
+
+  ثم يحدث ما لم تتوقّعه: رسالة تصلك من حسابٍ مجهول، بلا صورة، بلا ملامح سيخبرك ماذا حدث سترد عليه ب لا اعرف
+  انتظر الرساله</div>
+
+
+
+<!-- ✅ الزر الجديد -->
+<button id="redirectBtn">فهمت</button>
+
+<script>
+// Matrix Rain
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const word = "1450";
+const fontSize = 20;
+const columns = Math.floor(canvas.width / fontSize);
+const drops = [];
+for (let i = 0; i < columns; i++) drops[i] = Math.floor(Math.random() * -50);
+
+function draw() {
+  ctx.fillStyle = "rgba(0,0,0,0.1)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = "#0f0";
+  ctx.font = fontSize + "px monospace";
+  for (let i = 0; i < drops.length; i++) {
+    const choice = Math.random();
+    let text = choice > 0.9 ? word : word[Math.floor(Math.random()*word.length)];
+    ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+    if (drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = Math.floor(Math.random() * -20);
+    drops[i]++;
+  }
+}
+setInterval(draw, 60);
+
+// Glitch effect
+function randomClip(el) {
+  let top = Math.floor(Math.random()*150);
+  let bottom = top + Math.floor(Math.random()*80)+20;
+  el.style.clip = `rect(${top}px,9999px,${bottom}px,0)`;
+}
+const red = document.querySelector(".skull-red");
+const cyan = document.querySelector(".skull-cyan");
+const skullBox = document.getElementById("skullBox");
+const glitchText = document.getElementById("glitchText");
+
+setInterval(() => {
+  randomClip(red);
+  randomClip(cyan);
+  if (Math.random() > 0.85) {
+    skullBox.style.opacity = 0;
+    setTimeout(() => skullBox.style.opacity = 1, Math.random()*300+100);
+  }
+  if (Math.random() > 0.9) {
+    glitchText.style.opacity = 0;
+    setTimeout(() => glitchText.style.opacity = 1, Math.random()*400+150);
+  }
+}, 150);
+
+// 🔗 مصدر الزيارة
+const sites = [
+  "https://www.google.com",
+  "https://www.youtube.com",
+  "https://www.facebook.com",
+  "https://www.instagram.com",
+  "https://twitter.com"
+];
+
+function getRandomSite() {
+  return sites[Math.floor(Math.random() * sites.length)];
+}
+
+// تحقق: هل الدخول مسموح من الصفحة الأولى؟
+if (!localStorage.getItem("allowSecondPage")) {
+  window.location.replace(getRandomSite());
+} else {
+  // أول دخول فقط
+  if (localStorage.getItem("blockedSecondPage")) {
+    window.location.replace(getRandomSite());
+  } else {
+    localStorage.setItem("blockedSecondPage", "true");
+    localStorage.removeItem("allowSecondPage"); // علشان ما يدخلش تاني غير من الأولى
+  }
+}
+
+
+
+
+</script>
+</body>
+</html>
