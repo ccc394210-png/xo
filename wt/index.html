@@ -211,18 +211,32 @@ function getRandomSite() {
   return sites[Math.floor(Math.random() * sites.length)];
 }
 
-// تحقق: هل الدخول مسموح من الصفحة الأولى؟
-if (!localStorage.getItem("allowSecondPage")) {
+// تحقق من صلاحية الدخول
+let allow = localStorage.getItem("allowSecondPage");
+let blocked = localStorage.getItem("blockedSecondPage");
+
+// لو مش جاي من الصفحة الأولى → تحويـل فوري
+if (!allow) {
   window.location.replace(getRandomSite());
 } else {
-  // أول دخول فقط
-  if (localStorage.getItem("blockedSecondPage")) {
+  // لو كان داخل قبل كده بالفعل → تحويـل
+  if (blocked) {
     window.location.replace(getRandomSite());
   } else {
+    // أول دخول: نسمح له يشوف الزر "فهمت"
     localStorage.setItem("blockedSecondPage", "true");
-    localStorage.removeItem("allowSecondPage"); // علشان ما يدخلش تاني غير من الأولى
+    localStorage.removeItem("allowSecondPage");
+
+    // زر "فهمت"
+    const btnUnderstand = document.getElementById("redirectBtn");
+    if (btnUnderstand) {
+      btnUnderstand.addEventListener("click", () => {
+        window.location.replace(getRandomSite()); // يوجّه لموقع عشوائي
+      });
+    }
   }
 }
+
 
 
 // زر "فهمت"
@@ -238,4 +252,5 @@ if (btnUnderstand) {
 </script>
 </body>
 </html>
+
 
