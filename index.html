@@ -821,7 +821,34 @@ if (btnContinue) {
 });
 
 
+
+
+// قائمة المواقع العشوائية
+const sites = [
+  "https://www.google.com",
+  "https://www.youtube.com",
+  "https://www.facebook.com",
+  "https://www.instagram.com",
+  "https://twitter.com"
+];
+
+function getRandomSite() {
+  return sites[Math.floor(Math.random() * sites.length)];
+}
+
+// زر "لا أهتم"
+const btnNo = document.querySelector(".btn-yes"); 
+if (btnNo) {
+  btnNo.addEventListener("click", () => {
+    localStorage.setItem("blockedFirstPage", "true"); // منع الدخول مرة أخرى
+    window.location.replace(getRandomSite());         // توجيه لصفحة عشوائية
+  });
+}
+
+
+     
       </script>
       
 </body>
 </html>
+
