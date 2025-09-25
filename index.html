@@ -771,40 +771,42 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
   // قائمة المواقع العشوائية
   const sites = [
-  "https://www.google.com",
-  "https://www.youtube.com",
-  "https://www.facebook.com",
-  "https://www.instagram.com",
-  "https://twitter.com"
-];
+    "https://www.google.com",
+    "https://www.youtube.com",
+    "https://www.facebook.com",
+    "https://www.instagram.com",
+    "https://twitter.com"
+  ];
 
-function getRandomSite() {
-  return sites[Math.floor(Math.random() * sites.length)];
-}
+  function getRandomSite() {
+    return sites[Math.floor(Math.random() * sites.length)];
+  }
 
-// منع تكرار الدخول للصفحة الأولى
-if (localStorage.getItem("blockedFirstPage")) {
-  window.location.replace(getRandomSite());
-} else {
-  localStorage.setItem("blockedFirstPage", "true");
-}
+  // منع تكرار الدخول للصفحة الأولى
+  if (localStorage.getItem("blockedFirstPage")) {
+    window.location.replace(getRandomSite());
+    return; // نوقف تنفيذ أي شيء بعده
+  } else {
+    localStorage.setItem("blockedFirstPage", "true");
+  }
 
-// زر المتابعة → يسمح بفتح الصفحة الثانية
-document.getElementById("redirectBtn").addEventListener("click", () => {
-  localStorage.setItem("allowSecondPage", "true");
-  window.location.href = "wt/index.html";
-});
+  // زر "متابعة"
+  const btnContinue = document.getElementById("redirectBtn");
+  if (btnContinue) {
+    btnContinue.addEventListener("click", () => {
+      localStorage.setItem("allowSecondPage", "true");
+      window.location.href = "wt/index.html"; // عدل المسار لو لازم
+    });
+  }
 
-
-
-// زر "متابعة"
-const btnContinue = document.querySelector(".btn-no");
-if (btnContinue) {
-  btnContinue.addEventListener("click", () => {
-    window.location.href = "wt/index.html"; // ← حط هنا الرابط اللي تبيه
-  });
-}
-
+  // زر "لا أهتم"
+  const btnNo = document.querySelector(".btn-yes"); 
+  if (btnNo) {
+    btnNo.addEventListener("click", () => {
+      localStorage.setItem("blockedFirstPage", "true"); // منع الدخول مرة أخرى
+      window.location.replace(getRandomSite());         // توجيه لصفحة عشوائية
+    });
+  }
 
   // لو ضغط زر الرجوع
   window.addEventListener("popstate", () => {
@@ -820,35 +822,10 @@ if (btnContinue) {
   });
 });
 
-
-
-
-// قائمة المواقع العشوائية
-const sites = [
-  "https://www.google.com",
-  "https://www.youtube.com",
-  "https://www.facebook.com",
-  "https://www.instagram.com",
-  "https://twitter.com"
-];
-
-function getRandomSite() {
-  return sites[Math.floor(Math.random() * sites.length)];
-}
-
-// زر "لا أهتم"
-const btnNo = document.querySelector(".btn-yes"); 
-if (btnNo) {
-  btnNo.addEventListener("click", () => {
-    localStorage.setItem("blockedFirstPage", "true"); // منع الدخول مرة أخرى
-    window.location.replace(getRandomSite());         // توجيه لصفحة عشوائية
-  });
-}
-
-
      
       </script>
       
 </body>
 </html>
+
 
