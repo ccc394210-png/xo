@@ -239,18 +239,10 @@ if (!allow) {
 
 
 
-// زر "فهمت"
-const btnUnderstand = document.getElementById("redirectBtn");
-if (btnUnderstand) {
-  btnUnderstand.addEventListener("click", () => {
-    localStorage.setItem("blockedSecondPage", "true"); // يمنع فتح الصفحة تاني
-    window.location.replace(getRandomSite());          // يوجّه لموقع عشوائي
-  });
-}
-
 
 </script>
 </body>
 </html>
+
 
 
